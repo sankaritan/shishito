@@ -45,7 +45,7 @@ def pytest_addoption(parser):
     parser.addoption("--browser", action="store",
                      help="BrowserStack browser: Chrome, Firefox, IE, PhantomJS, Opera, Safari")
     parser.addoption("--browser_version", action="store",
-                     help="BrowserStack browser version. Value depends on selected browser.")
+                     help="BrowserStack or Saucelabs browser version. Value depends on selected browser.")
     parser.addoption("--os", action="store",
                      help="BrowserStack operating system: Windows, OS X")
     parser.addoption("--os_version", action="store",
@@ -71,6 +71,12 @@ def pytest_addoption(parser):
                      help="Browserstack username and password")
     parser.addoption('--test_mobile', action="store", default=None,
                      help="Execute tests on mobile devices")
+
+    # SAUCELABS Selenium
+    parser.addoption("--browserName", action="store",
+                     help="Saucelabs browser: Chrome, Firefox, IE, PhantomJS, Opera, Safari")
+    parser.addoption("--platform", action="store",
+                     help="Saucelabs platform, e.g. Windows 10")
 
     # APPIUM
     parser.addoption('--platformName', action="store", default=None,

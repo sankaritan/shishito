@@ -15,8 +15,15 @@ class ControlExecution(ShishitoExecution):
         :return: str with test result prefix
         """
 
-        browser = self.shishito_support.get_opt(config_section, 'browser')
-        browser_version = self.shishito_support.get_opt(config_section, 'browser_version')
+        # local & browserstack selenium
+        try:
+            browser = self.shishito_support.get_opt(config_section, 'browser')
+            browser_version = self.shishito_support.get_opt(config_section, 'browser_version')
+
+        # saucelabs selenium
+        except:
+            browser = self.shishito_support.get_opt(config_section, 'browserName')
+            browser_version = self.shishito_support.get_opt(config_section, 'version')
         resolution = self.shishito_support.get_opt(config_section, 'resolution')
 
         return '[%s, %s, %s]' % (browser, browser_version, resolution)

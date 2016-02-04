@@ -52,7 +52,7 @@ class ControlEnvironment(ShishitoEnvironment):
         pytest_args = {
             '--platform': '--platform=%s' % self.shishito_support.get_opt(config_section, 'platform'),
             '--browserName': '--browserName=%s' % self.shishito_support.get_opt(config_section, 'browserName'),
-            '--version': '--version=%s' % self.shishito_support.get_opt(config_section, 'version')
+            '--browser_version': '--browser_version=%s' % self.shishito_support.get_opt(config_section, 'version')
         }
 
         saucelabs_credentials = self.shishito_support.get_opt('saucelabs')
