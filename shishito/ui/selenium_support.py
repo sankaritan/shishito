@@ -6,18 +6,18 @@
 Helper functions that abstract often basic webdriver operations into more usable functional blocks.
 """
 
-import time
 import os
+import time
 
 import requests
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException, \
     ElementNotVisibleException, TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-from unittestzero import Assert
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.wait import WebDriverWait
+from unittestzero import Assert
 
 from shishito.runtime.shishito_support import ShishitoSupport
 
@@ -27,7 +27,8 @@ class SeleniumTest(object):
         self.driver = driver
         self.shishito_support = ShishitoSupport()
         self.base_url = self.shishito_support.get_opt('base_url')
-        self.default_implicit_wait = int(self.shishito_support.get_opt('default_implicit_wait'))
+        self.default_implicit_wait = int(
+            self.shishito_support.get_opt('default_implicit_wait'))
         self.timeout = int(self.shishito_support.get_opt('timeout'))
 
     def save_screenshot(self, name, project_root):
@@ -35,7 +36,8 @@ class SeleniumTest(object):
         screenshot_folder = os.path.join(project_root, 'screenshots')
         if not os.path.exists(screenshot_folder):
             os.makedirs(screenshot_folder)
-        self.driver.save_screenshot(os.path.join(screenshot_folder, name + '.png'))
+        self.driver.save_screenshot(
+            os.path.join(screenshot_folder, name + '.png'))
 
     def save_file_from_url(self, file_path, url):
         """ Saves file from url """
@@ -75,11 +77,11 @@ class SeleniumTest(object):
         self.driver.get(url)
         self.driver.implicitly_wait(self.default_implicit_wait)
 
-    def click_and_wait(self, element, locator=None):
+    def click_and_wait(self, element, locator=None, wait_time=None):
         """ clicks on a element and then waits for specific element to be present or simply waits implicitly """
         element.click()
         if locator:
-            self.wait_for_element_ready(locator)
+            self.wait_for_element_ready(locator, wait_time)
         else:
             self.driver.implicitly_wait(10)
 
@@ -91,7 +93,8 @@ class SeleniumTest(object):
         for image in self.driver.find_elements_by_tag_name('img'):
             loaded = self.driver.execute_script(script, image)
             if not loaded and image.get_attribute('src'):
-                images_not_loaded.append('%s: %s' % (self.driver.title, image.get_attribute('src')))
+                images_not_loaded.append(
+                    '%s: %s' % (self.driver.title, image.get_attribute('src')))
         return images_not_loaded
 
     def is_element_present(self, locator):
@@ -196,7 +199,8 @@ class SeleniumTest(object):
                             + '" after ' + str(counter * delay) + ' seconds')
                 break
 
-    def wait_for_attribute_value(self, attribute, attribute_text, locator, max_count=20, delay=0.25):
+    def wait_for_attribute_value(self, attribute, attribute_text, locator,
+                                 max_count=20, delay=0.25):
         """ Waits for element attribute value to match specified text, until certain deadline """
         element = self.driver.find_element(*locator)
         counter = 0
@@ -205,17 +209,22 @@ class SeleniumTest(object):
                 time.sleep(delay)
                 counter += 1
             else:
-                Assert.fail('"' + attribute_text + '" text did not match "' + element.get_attribute(attribute)
-                            + '" after ' + str(counter * delay) + ' seconds')
+                Assert.fail(
+                    '"' + attribute_text + '" text did not match "' + element.get_attribute(
+                        attribute)
+                    + '" after ' + str(counter * delay) + ' seconds')
                 break
 
     def wait_for_element_ready(self, locator, timeout=None):
         """ Waits until certain element is present and clickable """
         timeout = timeout or self.timeout
-        WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator),
-                                                  'Element specified by {0} was not present!'.format(locator))
-        WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator),
-                                                  'Element specified by {0} did not become clickable!'.format(locator))
+        WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(locator),
+            'Element specified by {0} was not present!'.format(locator))
+        WebDriverWait(self.driver, timeout).until(
+            EC.element_to_be_clickable(locator),
+            'Element specified by {0} did not become clickable!'.format(
+                locator))
 
     def find_element(self, locator):
         """ Return the element at the specified locator."""
@@ -231,7 +240,6 @@ class SeleniumTest(object):
         selected = [item for item in elements if item.text == text]
         return selected[0] if len(selected) == 1 else selected
 
-
     def link_destination(self, locator):
         """ Return the href attribute of the element at the specified locator."""
         link = self.driver.find_element(*locator)
@@ -245,7 +253,8 @@ class SeleniumTest(object):
     def select_dropdown_value(self, select, value):
         """ Set 'select' dropdown value """
         select = Select(select)
-        option = [option for option in select.options if option.text == value][0]
+        option = [option for option in select.options if option.text == value][
+            0]
         option.click()
 
     def upload_file(self, file_path, input_field_locator, delay=5):
